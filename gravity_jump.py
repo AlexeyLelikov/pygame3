@@ -19,11 +19,34 @@ class Sprite: # Класс родитель
         self.image = pygame.image.load(img)
         self.rect = self.image.get_rect(topleft = (x,y))
 class Hero(Sprite):
-    def __init__(self,img,x,y,speedx,speedy):
+    def __init__(self,img,x,y,speedx,speedy,imgPlayerGoL,imgPlayerGoR):
         Sprite.__init__(self,img,x,y)
         self.speedx = speedx
         self.speedy = speedy
-        self.jump = 5
+        self.jump = 20
+        self.animR = imgPlayerGoR
+        self.animL = imgPlayerGoL
+        self.cadr = 0
+        self.tn = 0
+    def update(self,pl,g):
+        if key[pygame.K_LEFT]:
+            self.rect.x -= self.speedx
+            self.image = self.animL[self.cadr % 5]
+        if key[pygame.K_RIGHT]:
+            self.rect.x += self.speedx
+            self.image = self.animR[self.cadr % 5]
+        if collide(self.rect, pl.rect):
+            self.tn += 1
+            self.speedy = 0
+            if key[pygame.K_SPACE]:
+                self.speedy -= self.jump
+        else:
+            self.speedy += g.value
+        if self.tn > 75:
+            pl.rect.y += pl.speedy
+        self.rect.y += self.speedy
+        self.cadr += 1
+
 class Platform(Sprite):
     def __init__(self,img,x,y,speedy,time):
         Sprite.__init__(self,img,x,y)
@@ -36,7 +59,6 @@ class Const:
 # Create object
 g = Const(1)
 window = pygame.display.set_mode((Screen_width,Screen_height))
-player = Hero('GoAnim/b1.png',500,100,2,0)
 pl = Platform('ground.png',400,500,1,0)
 clock = pygame.time.Clock()
 imgPlayerGoR = [pygame.image.load('GoAnim/b1.png'),
@@ -47,7 +69,7 @@ imgPlayerGoR = [pygame.image.load('GoAnim/b1.png'),
 imgPlayerGoL = []
 for img in imgPlayerGoR:
     imgPlayerGoL.append(pygame.transform.flip(img,True,False))
-Ncadr = 0
+player = Hero('GoAnim/b1.png',500,100,10,0,imgPlayerGoL,imgPlayerGoR)
 game = True
 while game:
     clock.tick(15)
@@ -55,18 +77,7 @@ while game:
         if ev.type == pygame.QUIT:
             game = False
     key = pygame.key.get_pressed()
-    if key[pygame.K_LEFT]:
-        player.rect.x -= player.speedx
-        player.image = imgPlayerGoL[Ncadr % 5]
-    if key[pygame.K_RIGHT]:
-        player.rect.x += player.speedx
-        player.image = imgPlayerGoR[Ncadr % 5]
-    if collide(player.rect,pl.rect):
-        player.speedy = 0
-    else:
-        player.speedy += g.value
-    player.rect.y += player.speedy
-    Ncadr += 1
+    player.update(pl,g)
     window.fill((0,0,0))
     window.blit(player.image,player.rect)
     window.blit(pl.image,pl.rect)
