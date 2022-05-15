@@ -1,5 +1,4 @@
 
-
 def collide(Sprite1,Sprite2):
     if ((     Sprite1.x <=  Sprite2.x  <= Sprite1.x + Sprite1.width
         and   Sprite1.y <= Sprite2.y <= Sprite1.y + Sprite1.height)
@@ -19,4 +18,5 @@ def collideG(Sprite,Group):
     for Spr in Group.sprites():
         if collide(Sprite.rect,Spr.rect):
             IsCollide = True
+            return IsCollide
     return IsCollide
