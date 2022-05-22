@@ -26,12 +26,13 @@ class Player(Sprite):
             self.game = False
         self.cadr += 1
 class Fireball(Sprite):
-    def __init__(self,img,speedy,Anim):
+    def __init__(self,img,speedy,Anim,Group):
         super().__init__(img,random.randint(1,1200),0)
         self.start_speed = speedy
         self.speedy = speedy
         self.Anim = Anim
         self.cadr = 0
+        self.add(Group)
     def update(self,g):
         if self.rect.y < 700:
             self.speedy += g.value

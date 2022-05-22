@@ -1,6 +1,5 @@
 import pygame
 from class_of_sprite import Const,Fireball,Player
-
 # Создание анимации Fireball
 ImgAnimFireBall = [pygame.image.load('GoAnim/fireball.png'),
                    pygame.image.load('GoAnim/fireball1.png'),
@@ -19,8 +18,29 @@ imgPlayerGoL = []
 for img in imgPlayerGoR:
     imgPlayerGoL.append(pygame.transform.flip(img,True,False))
 
-window = pygame.display.set_mode(1280,700)
+window = pygame.display.set_mode((1280,700))
 clock = pygame.time.Clock()
 g = Const(1)
+FireballGroup = pygame.sprite.Group()
+fb1 = Fireball('GoAnim/fireball.png',5,ImgAnimFireBall,FireballGroup)
+fb2 = Fireball('GoAnim/fireball.png',5,ImgAnimFireBall,FireballGroup)
+player = Player('GoAnim/b1.png',600,600,5,imgPlayerGoR,imgPlayerGoL)
+game = True
+while game:
+    clock.tick(15)
+    key = pygame.key.get_pressed()
+    player.update(key,FireballGroup)
+    FireballGroup.update(g)
+    window.fill((0,0,0))
+    window.blit(player.image,player.rect)
+    FireballGroup.draw(window)
+    pygame.display.update()
+    if player.game == False:
+        game = False
+pygame.quit()
+
+
+
+
 
 
