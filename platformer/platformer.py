@@ -37,6 +37,27 @@ class Player(Sprite):
         elif key[pygame.K_DOWN]:
             self.rect.y += speed
 
+w = pygame.display.set_mode((ScreenWidth,ScreenHeight))
+world = pygame.Surface((WorldWidth,WorldHeight))
+player = Player(900,600,'player.jpg',3)
+camera = Camera()
+bg_sprite = Sprite(0,0,'bg.png')
+bg_sprite.image = pygame.transform.scale(bg_sprite.image,(1800,1200))
+game = True
+while game:
+    for ev in pygame.event.get():
+        if ev.type == pygame.QUIT:
+            game = False
+    player.update()
+    camera.update(player)
+    world.fill((0,0,0))
+    world.blit(bg_sprite.image,bg_sprite.rect)
+    world.blit(player.image,player.rect)
+    pygame.display.update()
+pygame.quit()
+
+
+
 
 
 
